@@ -6,6 +6,7 @@
  * @author      Md. Hasan Shahriar <info@themeaxe.com>
  * @since       1.0.1
  */
+namespace SHAHRIAR;
 
 class TmxCustomPost {
 
