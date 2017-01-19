@@ -17,4 +17,4 @@ Copyright 2016 ThemeAxe.
 
 require_once( dirname(__FILE__) . '/app/autoload.php' );
 
-new SHAHRIAR\Shahriar();
+new Shahriar();

@@ -1,8 +1,8 @@
 <?php
-
+namespace SHAHRIAR;
 
 class Deactivator{
     public static function run(){
-        echo 'deactivated';
+        flush_rewrite_rules();
     }
 }

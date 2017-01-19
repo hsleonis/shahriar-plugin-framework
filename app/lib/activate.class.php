@@ -1,8 +1,8 @@
 <?php
-
+namespace SHAHRIAR;
 
 class Activator{
     public static function run(){
-        echo 'activated';
+        flush_rewrite_rules();
     }
 }

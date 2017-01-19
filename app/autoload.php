@@ -3,12 +3,6 @@
  * @package Shahriar
  */
 
-namespace SHAHRIAR;
-
-/*
-add_action( 'init', array( 'Watchman', 'init' ) );
-*/
-
 class Shahriar{
     /**
      * Instance initialized
@@ -41,6 +35,7 @@ class Shahriar{
      * Autoload plugin library classes
      */
     private static function autoload(){
+        // All class in lib folder
         $dir = new \DirectoryIterator(dirname(__FILE__) .'/lib');
 
         foreach ($dir as $fileinfo) {
@@ -52,6 +47,16 @@ class Shahriar{
                 }
             }
         }
+
+        // WP Router
+        require_once(dirname(__FILE__). '/wp-router/wp-router.php');
+    }
+
+    /**
+     * Attach hooks
+     */
+    private static function hooks(){
+        add_action( 'plugins_loaded', array( 'PageTemplater', 'get_instance' ) );
     }
 
     /**
@@ -74,6 +79,9 @@ class Shahriar{
 
             // Deactivate plugin
             register_deactivation_hook( __FILE__, array( 'Deactivator', 'run' ) );
+            
+            // Attach hooks
+            self::hooks();
         }
         else{
 
