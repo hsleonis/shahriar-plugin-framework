@@ -11,6 +11,12 @@ class Shahriar{
     private static $initiated = false;
 
     /**
+     * Plugin variables
+     * @var $vars array
+     */
+    public static $vars;
+
+    /**
      * Shahriar constructor.
      */
     public function __construct(){
@@ -21,14 +27,10 @@ class Shahriar{
 
     /**
      * Define plugin variables
-     * @param $defined array
+     * @param $vars array
      */
-    private static function globals($defined){
-        foreach ($defined as $d => $val){
-            if(!defined(__NAMESPACE__.$d)){
-                define(__NAMESPACE__.$d, $val);
-            }
-        }
+    public function globals($vars=array()){
+        self::$vars = $vars;
     }
 
     /**
@@ -82,6 +84,9 @@ class Shahriar{
             
             // Attach hooks
             self::hooks();
+
+            // Test admin notice
+            
         }
         else{
 
