@@ -41,7 +41,7 @@ class Shahriar{
         $dir = new \DirectoryIterator(dirname(__FILE__) .'/lib');
 
         foreach ($dir as $fileinfo) {
-            if (!$fileinfo->isDot()) {
+            if (is_file(dirname(__FILE__) .'/lib/'.$fileinfo->getFilename())) {
 
                 $name = $fileinfo->getFilename();
                 if(is_readable(dirname(__FILE__) .'/lib/'.$name)){
@@ -49,9 +49,6 @@ class Shahriar{
                 }
             }
         }
-
-        // WP Router
-        require_once(dirname(__FILE__). '/wp-router/wp-router.php');
     }
 
     /**
@@ -86,7 +83,9 @@ class Shahriar{
             self::hooks();
 
             // Test admin notice
-            
+            new TmxAdminNotice(array(
+                'msg' => 'Hello Plugin User!'
+            ));
         }
         else{
 
