@@ -74,10 +74,10 @@ class Shahriar{
             self::autoload();
 
             // Activate plugin
-            register_activation_hook( __FILE__, array( 'Activator', 'run' ) );
+            new \SHAHRIAR\Activator();
 
             // Deactivate plugin
-            register_deactivation_hook( __FILE__, array( 'Deactivator', 'run' ) );
+            new \SHAHRIAR\Deactivator();
             
             // Attach hooks
             self::hooks();

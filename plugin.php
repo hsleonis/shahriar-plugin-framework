@@ -15,6 +15,17 @@ Text Domain: themeaxe
 Copyright 2016 ThemeAxe.
 */
 
+/**
+ * Initialize plugin and library
+ */
 require_once( dirname(__FILE__) . '/app/autoload.php' );
-
 new Shahriar();
+
+/**
+ * Dashboard widgets
+ */
+require_once ( dirname(__FILE__) . '/app/Widgets/dashboardwidgets.php' );
+TestDashboardWidgets::construct(array(
+    'slug' => 'test-widget'
+));
+
