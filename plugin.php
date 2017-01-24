@@ -25,7 +25,5 @@ new Shahriar();
  * Dashboard widgets
  */
 require_once ( dirname(__FILE__) . '/app/Widgets/dashboardwidgets.php' );
-TestDashboardWidgets::construct(array(
-    'slug' => 'test-widget'
-));
+TestDashboardWidgets::construct();
 
