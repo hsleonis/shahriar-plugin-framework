@@ -99,6 +99,7 @@ class Shahriar{
                     'content' => '<p>+88 01234 567890</p><p><a href="mailto:info@themeaxe.com">info@themeaxe.com</a></p>'
                 )
             ));
+            $helptabs->remove('tab-link-overview');
         }
         else{
 

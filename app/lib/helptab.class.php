@@ -21,6 +21,12 @@ class TmxHelpTab{
     private $page;
 
     /**
+     * Tab id
+     * @var $tab_to_remove string
+     */
+    private $tab_to_remove;
+
+    /**
      * TmxHelpTab constructor.
      * @param array $tabs
      */
@@ -61,6 +67,30 @@ class TmxHelpTab{
                 'callback' => array( $this, 'prepare' )
             ) );
         }
+    }
+
+    /**
+     * Remove help tabs
+     * @param null,id $id
+     */
+    public function remove($id=null)
+    {
+        $this->tab_to_remove = $id;
+        add_action( "load-{$GLOBALS['pagenow']}", array( $this, 'remove_tabs' ), 20 );
+    }
+
+    /**
+     *
+     */
+    public function remove_tabs()
+    {
+        // Get screen after page load
+        $screen = get_current_screen();
+
+        if($this->tab_to_remove===null)
+            $screen->remove_help_tabs();
+        else
+            $screen->remove_help_tab($this->tab_to_remove);
     }
 
     /**
