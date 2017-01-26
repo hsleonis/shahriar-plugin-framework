@@ -86,6 +86,19 @@ class Shahriar{
             new TmxAdminNotice(array(
                 'msg' => 'Hello Plugin User!'
             ));
+
+            // Test Help tab
+            $helptabs = new TmxHelpTab();
+            $helptabs->create(array('options-general', 'options-writing'), array(
+                'first-tab' => array(
+                    'title'   => 'ThemeAxe',
+                    'content' => 'It is the best software firm ever!'
+                ),
+                'second-tab' => array(
+                    'title'   => 'Contact',
+                    'content' => '<p>+88 01234 567890</p><p><a href="mailto:info@themeaxe.com">info@themeaxe.com</a></p>'
+                )
+            ));
         }
         else{
 

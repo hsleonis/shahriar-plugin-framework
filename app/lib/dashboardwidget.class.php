@@ -79,6 +79,7 @@ class TmxDashboardWidget{
         self::$opts['network'] = isset($opts['network'])?boolval($opts['network']):false;
         self::$opts['top'] = isset($opts['top'])?$opts['top']:false;
         self::$opts['side'] = isset($opts['side'])?$opts['side']:false;
+        self::$opts['options'] = (isset($opts['options']) && is_array($opts['options']))?$opts['options']:array();
     }
 
     /**
@@ -96,6 +97,8 @@ class TmxDashboardWidget{
         if(self::$opts['top'] or self::$opts['side']){
             self::move_dashboard_widget();
         }
+
+        self::register_dashboard_widget_options(self::$opts['options']);
     }
 
     /**
@@ -147,10 +150,21 @@ class TmxDashboardWidget{
     public function remove_dashboard_meta(){}
 
     /**
+     * Register dashboard widget options,
+     * otherwise an error will be shown first time the form is shown.
+     * @param array $args
+     */
+    public static function register_dashboard_widget_options($args=array())
+    {
+        //Register widget settings by updating only when the option isn't existing
+        self::update_dashboard_widget_options($args, true);
+    }
+
+    /**
      * Gets the options for a widget of the specified name.
      * @return array An associative array containing the widget's options and values. False if no opts.
      */
-    private static function get_dashboard_widget_options()
+    public static function get_dashboard_widget_options()
     {
         //Fetch ALL dashboard widget options from the db
         $opts = get_option( 'dashboard_widget_options' );
@@ -173,7 +187,7 @@ class TmxDashboardWidget{
      * @param null $default
      * @return string
      */
-    private static function get_dashboard_widget_option( $option, $default=NULL )
+    public static function get_dashboard_widget_option( $option, $default=NULL )
     {
 
         $opts = self::get_dashboard_widget_options();
@@ -196,24 +210,24 @@ class TmxDashboardWidget{
      * @param $add_only bool If true, options will not be added if widget options already exists
      * @return mixed option
      */
-    private static function update_dashboard_widget_options( $args=array(), $add_only=false )
+    public static function update_dashboard_widget_options( $args=array(), $add_only=false )
     {
-        //Fetch ALL dashboard widget options from the db...
-        $opts = get_option( 'dashboard_widget_options' );
+        //Fetch ALL dashboard widget options from the db
+        $settings = get_option( 'dashboard_widget_options' );
 
         //Get just our widget's options, or set empty array
-        $w_opts = ( isset( $opts[self::$opts['slug']] ) ) ? $opts[self::$opts['slug']] : array();
+        $w_opts = ( isset( $settings[self::$opts['slug']] ) ) ? $settings[self::$opts['slug']] : array();
 
         if ( $add_only ) {
             //Flesh out any missing options (existing ones overwrite new ones)
-            $opts[self::$opts['slug']] = array_merge($args,$w_opts);
+            $settings[self::$opts['slug']] = array_merge($args,$w_opts);
         }
         else {
             //Merge new options with existing ones, and add it back to the widgets array
-            $opts[self::$opts['slug']] = array_merge($w_opts,$args);
+            $settings[self::$opts['slug']] = array_merge($w_opts,$args);
         }
 
         //Save the entire widgets array back to the db
-        return update_option('dashboard_widget_options', $opts);
+        return update_option('dashboard_widget_options', $settings);
     }
 }

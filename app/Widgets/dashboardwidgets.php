@@ -12,9 +12,11 @@ class TestDashboardWidgets extends TmxDashboardWidget{
         self::create_dashboard_widget(array(
             'slug' => 'test-widget',
             'title' => 'Test Widget',
-            'form' => false,
             'side'   => true,
-            'top' => true
+            'top' => true,
+            'options' => array(
+                'example_number' => 15,
+            )
         ));
 
         parent::construct();
@@ -27,11 +29,27 @@ class TestDashboardWidgets extends TmxDashboardWidget{
     
     public function dashboard_form_function()
     {
-        echo 'This is the form';
+        if(isset( $_POST['dashboard-widget-nonce'] )) {
+            $number = stripslashes($_POST['number']);
+            self::update_dashboard_widget_options(
+                array(
+                    'example_number' => $number,
+                )
+            );
+        }
+        ?>
+        <div>
+            <input type="text" autocomplete="off" name="number" value="<?php echo self::get_dashboard_widget_option('example_number', 15); ?>" />
+        </div>
+        <?php
     }
     
     public function dashboard_widget_function()
     {
-        echo 'This is a custom Dashboard Widget';
+        ?>
+        <p>
+            Count: <b><?php echo self::get_dashboard_widget_option('example_number'); ?></b>
+        </p>
+        <?php
     }
 }
