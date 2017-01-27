@@ -27,22 +27,60 @@ class TmxHelpTab{
     private $tab_to_remove;
 
     /**
+     * Page id(s) where the sidebar will be shown.
+     * @var $sidebarpage string or array or null
+     */
+    private $sidebarpage;
+
+    /**
+     * Content to be displayed on help tab sidebar.
+     * @var $sidebarcontent string
+     */
+    private $sidebarcontent;
+
+    /**
      * TmxHelpTab constructor.
      * @param array $tabs
      */
     public function __construct(){}
 
     /**
+     * Check screen id
+     * @return bool
+     */
+    private function check_screen($page)
+    {
+        $screen = get_current_screen();
+        
+        if($page!==null){
+            if($GLOBALS['pagenow']!=='admin.php'){
+                if(is_array($page) && !in_array($screen->id, $page) ) {return false;}
+                else if(!is_array($page) && $screen->id !== $page) {return false;}
+            }
+            /*elseif(isset($_GET['page']) && $GLOBALS['pagenow']=='admin.php'){
+                if(is_array($this->page) && !in_array($_GET['page'], $this->page) ) {return;}
+                else if(!is_array($this->page) && $_GET['page'] !== $this->page) {return;}
+            }
+            // Not working on custom admin pages*/
+        }
+        
+        return true;
+    }
+
+    /**
      * Create help tabs
      * @param null,string,array $page
      * @param array $tabs
      */
-    public function create($page=null, $tabs=array())
+    public function create($page=null, $tabs=array(), $top=true)
     {
         $this->tabs = is_array($tabs)?$tabs:array();
         $this->page = $page;
 
-        add_action( "load-{$GLOBALS['pagenow']}", array( $this, 'add_tabs' ), 20 );
+        if($top)
+            add_action( "load-{$GLOBALS['pagenow']}", array( $this, 'add_tabs' ), 20 );
+        else
+            add_action( "load-{$GLOBALS['pagenow']}", array( $this, 'add_tabs' ), 20 );
     }
 
     /**
@@ -54,16 +92,24 @@ class TmxHelpTab{
         $screen = get_current_screen();
 
         if($this->page!==null){
-            if(is_array($this->page) && !in_array($screen->id, $this->page) ) {return;}
-            else if(!is_array($this->page) && $screen->id !== $this->page) {return;}
+            if($GLOBALS['pagenow']!=='admin.php'){
+                if(is_array($this->page) && !in_array($screen->id, $this->page) ) {return;}
+                else if(!is_array($this->page) && $screen->id !== $this->page) {return;}
+            }
+            /*elseif(isset($_GET['page']) && $GLOBALS['pagenow']=='admin.php'){
+                if(is_array($this->page) && !in_array($_GET['page'], $this->page) ) {return;}
+                else if(!is_array($this->page) && $_GET['page'] !== $this->page) {return;}
+            }
+            // Not working on custom admin pages*/
         }
+
 
         foreach ( $this->tabs as $id => $data )
         {
             $screen->add_help_tab( array(
                 'id'       => $id,
-                'title'    => __( $data['title'], 'some_textdomain' ),
-                'content'  => '<p>Some stuff that stays above every help text</p>',
+                'title'    => __( $data['title'], 'themeaxe' ),
+                'content'  => '',
                 'callback' => array( $this, 'prepare' )
             ) );
         }
@@ -76,11 +122,11 @@ class TmxHelpTab{
     public function remove($id=null)
     {
         $this->tab_to_remove = $id;
-        add_action( "load-{$GLOBALS['pagenow']}", array( $this, 'remove_tabs' ), 20 );
+        add_action( "admin_head", array( $this, 'remove_tabs' ) );
     }
 
     /**
-     *
+     * Remove tabs from admin
      */
     public function remove_tabs()
     {
@@ -91,6 +137,31 @@ class TmxHelpTab{
             $screen->remove_help_tabs();
         else
             $screen->remove_help_tab($this->tab_to_remove);
+    }
+
+    /**
+     * @param null $page
+     * @param string $content
+     */
+    public function sidebar( $page=null, $content='' )
+    {
+        $this->sidebarpage = $page;
+        $this->sidebarcontent = $content;
+        
+        add_action( "load-{$GLOBALS['pagenow']}", array( $this, 'add_sidebar' ), 25 );
+    }
+
+    /**
+     *
+     */
+    public function add_sidebar()
+    {
+        // Get screen after page load
+        $screen = get_current_screen();
+        
+        if($this->check_screen($this->sidebarpage)){
+            $screen->set_help_sidebar( $this->sidebarcontent );
+        }
     }
 
     /**
