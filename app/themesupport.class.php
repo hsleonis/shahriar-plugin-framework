@@ -18,10 +18,24 @@ class TmxThemeSupport{
     {
         $this->options = is_array($args)?$args:array();
         add_action( 'after_setup_theme', array($this, 'theme_features') );
+        add_action( 'init', array($this, 'update_image_size') );
+        add_action( 'init', array($this, 'remove_image_size') );
     }
 
     /**
      * Apply theme features
+     * feed
+     * formats
+     * thumbnails
+     * thumbnail-size
+     * image-size
+     * background
+     * header
+     * html5
+     * title
+     * editor-style
+     * textdomain
+     * custom
      */
     public function theme_features()
     {
@@ -40,12 +54,30 @@ class TmxThemeSupport{
             add_theme_support( 'post-thumbnails', $this->options['thumbnails'] );
 
         // Set custom thumbnail dimensions
+        /* array(
+            'width' => 400,
+            'height' => 300,
+            'corp' => array('top','left')
+        ) */
         if( isset($this->options['thumbnail-size']) && is_array($this->options['thumbnail-size']) ){
             $w = isset($this->options['thumbnail-size']['width'])?$this->options['thumbnail-size']['width']:150;
             $h = isset($this->options['thumbnail-size']['height'])?$this->options['thumbnail-size']['height']:150;
             $corp = isset($this->options['thumbnail-size']['corp'])?$this->options['thumbnail-size']['corp']:true;
 
             set_post_thumbnail_size( $w, $h, $corp );
+        }
+
+        // Set custom image sizes
+        if( isset($this->options['image-size']) && is_array($this->options['image-size']) ){
+            foreach ($this->options['image-size'] as $img){
+                if(!isset($img['name'])) continue;
+
+                $w = isset($img['width'])?$img['width']:150;
+                $h = isset($img['height'])?$img['height']:150;
+                $corp = isset($img['corp'])?$img['corp']:true;
+
+                add_image_size( $img['name'], $w, $h, $corp );
+            }
         }
 
         // Add theme support for Custom Background
@@ -104,5 +136,15 @@ class TmxThemeSupport{
             foreach ($this->options['custom'] as $slug)
                 add_theme_support( $slug );
         }
+    }
+
+    public function update_image_size()
+    {
+
+    }
+
+    public function remove_image_size()
+    {
+
     }
 }
