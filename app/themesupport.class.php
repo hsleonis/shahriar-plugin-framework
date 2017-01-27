@@ -97,5 +97,12 @@ class TmxThemeSupport{
         // Add theme support for Translation
         if(isset($this->options['textdomain']) && isset($this->options['textdomain-dir']))
             load_theme_textdomain( $this->options['textdomain'], $this->options['textdomain-dir'] );
+
+        // Custom theme options for plugin support etc.
+        /* array( 'woocommerce' ) */
+        if( isset($this->options['custom']) && is_array($this->options['custom']) ){
+            foreach ($this->options['custom'] as $slug)
+                add_theme_support( $slug );
+        }
     }
 }
