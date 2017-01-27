@@ -80,7 +80,7 @@ class TmxHelpTab{
         if($top)
             add_action( "load-{$GLOBALS['pagenow']}", array( $this, 'add_tabs' ), 20 );
         else
-            add_action( "load-{$GLOBALS['pagenow']}", array( $this, 'add_tabs' ), 20 );
+            add_action( "admin_head-{$GLOBALS['pagenow']}", array( $this, 'add_tabs' ), 20 );
     }
 
     /**
@@ -91,27 +91,16 @@ class TmxHelpTab{
         // Get screen after page load
         $screen = get_current_screen();
 
-        if($this->page!==null){
-            if($GLOBALS['pagenow']!=='admin.php'){
-                if(is_array($this->page) && !in_array($screen->id, $this->page) ) {return;}
-                else if(!is_array($this->page) && $screen->id !== $this->page) {return;}
+        if($this->check_screen($this->page)){
+            foreach ( $this->tabs as $id => $data )
+            {
+                $screen->add_help_tab( array(
+                    'id'       => $id,
+                    'title'    => __( $data['title'], 'themeaxe' ),
+                    'content'  => '',
+                    'callback' => array( $this, 'prepare' )
+                ) );
             }
-            /*elseif(isset($_GET['page']) && $GLOBALS['pagenow']=='admin.php'){
-                if(is_array($this->page) && !in_array($_GET['page'], $this->page) ) {return;}
-                else if(!is_array($this->page) && $_GET['page'] !== $this->page) {return;}
-            }
-            // Not working on custom admin pages*/
-        }
-
-
-        foreach ( $this->tabs as $id => $data )
-        {
-            $screen->add_help_tab( array(
-                'id'       => $id,
-                'title'    => __( $data['title'], 'themeaxe' ),
-                'content'  => '',
-                'callback' => array( $this, 'prepare' )
-            ) );
         }
     }
 
@@ -140,6 +129,7 @@ class TmxHelpTab{
     }
 
     /**
+     * Add sidebar to help tabs
      * @param null $page
      * @param string $content
      */
@@ -148,11 +138,11 @@ class TmxHelpTab{
         $this->sidebarpage = $page;
         $this->sidebarcontent = $content;
         
-        add_action( "load-{$GLOBALS['pagenow']}", array( $this, 'add_sidebar' ), 25 );
+        add_action( "admin_head-{$GLOBALS['pagenow']}", array( $this, 'add_sidebar' ), 25 );
     }
 
     /**
-     *
+     * Add sidebar
      */
     public function add_sidebar()
     {

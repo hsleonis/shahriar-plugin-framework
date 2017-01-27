@@ -98,9 +98,12 @@ class Shahriar{
                     'title'   => 'Contact',
                     'content' => '<p>+88 01234 567890</p><p><a href="mailto:info@themeaxe.com">info@themeaxe.com</a></p>'
                 )
-            ));
+            ), false);
             $helptabs->remove('overview');
-            $helptabs->sidebar('options-general',"Hello WOrld!");
+            $helptabs->sidebar(
+                array('options-general', 'options-writing'),
+                '<p><strong>For more Information:</strong></p><p><a href="http://themeaxe.com" target="_blank">Visit ThemeAxe</a></p>'
+            );
         }
         else{
 
